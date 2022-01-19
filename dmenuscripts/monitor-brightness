@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+choice=$(dmenu -h '24px' -fn 'CaskaydiaCove Nerd Font' -p 'Brightness: ')
+# quit if quit
+if [[ "$choice" == "quit" ]]; then
+    echo "Program Terminated." && exit 1
+# change brightness
+elif [ "$choice" ]; then
+    ddcutil setvcp 10 "${choice}"
+else
+    echo "Program Terminated." && exit 1
+fi

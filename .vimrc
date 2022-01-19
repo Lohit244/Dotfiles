@@ -7,6 +7,7 @@ set shiftwidth=4
 set smartcase
 set mouse=a
 set nobackup
+set linebreak
 call plug#begin("~/.vim/plugged")
 " The default plugin directory will be as follows:
 "   - Vim (Linux/macOS): '~/.vim/plugged'
@@ -23,6 +24,8 @@ Plug 'junegunn/vim-easy-align'
 
 Plug 'whatyouhide/vim-gotham'
 
+Plug 'ap/vim-css-color'
+
 Plug 'itchyny/lightline.vim'
 
 " Initialize plugin system
@@ -33,3 +36,4 @@ colorscheme gotham
 let g:lightline = {
       \ 'colorscheme': 'gotham',
       \ }
+let &t_ut=''

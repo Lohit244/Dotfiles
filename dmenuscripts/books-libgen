@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+choice=$(dmenu -nb "#001514" -sb "#5B5F97" -h '24px' -l 2 -fn 'CaskaydiaCove Nerd Font' -p 'Book Name: ')
+# quit if quit
+if [[ "$choice" == "Quit" ]]; then
+    echo "Program Terminated." && exit 1
+# change brightness
+elif [ "$choice" ]; then
+    firefox --new-window "http://libgen.rs/search.php?req=${choice}"
+else
+    echo "Program Terminated." && exit 1
+fi

@@ -1,29 +1,3 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 from typing import List  # noqa: F401
 import os
 import subprocess
@@ -35,9 +9,14 @@ from libqtile import qtile
 from libqtile import hook
 num_monitors = int(subprocess.run('xrandr|grep " connected"|wc -l', shell=True, stdout=subprocess.PIPE).stdout) -1
 mod = "mod4"
+user = "lohit244"
 terminal = "kitty"
-
-
+if num_monitors == 2:
+    monitor = os.path.expanduser('/home/{}/monitor-setup.sh'.format(user))
+    subprocess.run([monitor]) 
+elif num_monitors == 1:
+    monitor = os.path.expanduser('/home/{}/laptop-setup.sh'.format(user))
+    subprocess.run([monitor])
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -71,6 +50,9 @@ keys = [
         desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    
+    # Lock Screen
+    Key([mod,"shift"],"g",lazy.spawn("xfce4-screensaver-command -l"), desc="Locks the screen"),
 
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -89,103 +71,145 @@ keys = [
     # Key([mod], "r", lazy.spawncmd(),desc="Spawn a command using a prompt widget"),
 
     # Custom Keybinds for browser
-    Key([mod], "e", lazy.spawn("firefox"), desc="Launches firefox"),
+    Key([mod], "e", lazy.spawn("firefox"), desc="Launches Firefox"),
+    Key([mod,"shift"], "e", lazy.spawn("qutebrowser"), desc="Launches Qutebrowser"),
     
     # Spotify
     Key([mod],"s", lazy.spawn("spotify"), desc="Launches Spotify"),
 
     # VSCode binding
     Key([mod],"c", lazy.spawn('code'), desc="Launches VSCode"),
+
     # Steam
     Key([mod],"d", lazy.spawn('steam'), desc="Launch Steam"),
+
+    # Discord
+    Key([mod, "shift"],"z", lazy.spawn('Discord'), desc="Launch Discord"),
+
+    # Obsidian - My notes app
+    Key([mod],"x", lazy.spawn('obsidian'), desc="Launch Obsidian"),
+
+
     # Ranger keybind and file manager (naultilus cause i use manjaro gnome)
     Key([mod],"p", lazy.spawn(terminal + " ranger"), desc="Launches Ranger"),
-    Key([mod, "shift"],"p", lazy.spawn("nautilus"), desc="Launches Nautilus"),
+    Key([mod, "shift"],"p", lazy.spawn("thunar"), desc="Launches Thunar"),
 
     # keybinds to maximize and toggle floating mode
-    Key([mod],"m", lazy.layout.maximize()),
-    Key([mod],"f", lazy.window.toggle_floating()),
+    # Key([mod],"m", lazy.layout.maximize()),
+    Key([mod],"o", lazy.layout.shrink(), desc="Shrink window"),
+    Key([mod],"i", lazy.layout.grow(), desc="Grow window"),
+    Key([mod],"f", lazy.window.toggle_floating(), desc="Toggle Floating Mode for selected window"),
 
     # Dmenu Launch
-    Key(['mod4'], "r", lazy.run_extension(extension.DmenuRun(
+    Key([mod], "r", lazy.run_extension(extension.DmenuRun(
         dmenu_prompt="Run: ",
         dmenu_font="CaskaydiaCove Nerd Font",
         dmenu_height=24,
-        dmenu_lines=2,
+        dmenu_lines=10,
+        background="#001514",
+        dmenu_ignorecase=True,
+        selected_background="#5B5F97",
+        ))),
+    Key([mod, "shift"], "r", lazy.run_extension(extension.WindowList(
+        dmenu_prompt="Switch To: ",
+        dmenu_font="CaskaydiaCove Nerd Font",
+        dmenu_height=24,
+        dmenu_lines=10,
+        background="#001514",
+        selected_background="#5B5F97",
+        dmenu_ignorecase=True,
         ))),
 
     # Brightness Keys
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +2%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 2%-")),
+
+    # Sound Keys
+    Key([], 'XF86AudioRaiseVolume', lazy.spawn("amixer -q -D pulse set Master 5%+")),
+    Key([], 'XF86AudioLowerVolume', lazy.spawn("amixer -q -D pulse set Master 5%-")), 
     
-    #Screenshot
-    Key([mod,"shift"],"s", lazy.spawn("scrot -s"), desc="Takes screenshot and saves in home"),
+    # Screenshot
+    Key([mod,"shift"],"s", lazy.spawn("scrot -s /home/{}/Pictures/Screenshots/%b%d%H%M%S.png".format(user)), desc="Takes screenshot"),
 
 ]
 
 # groups = [Group(i) for i in "123456789"]
-groups = [Group("1", layout="monadtall"), Group("2", layout='monadtall'), Group("3", layout='monadtall'), Group("4", layout='monadtall'), Group("5", layout='monadtall'), Group("6", layout='monadtall'), Group("7", layout='monadtall'), Group("8")]
+groups = [Group("1", layout="monadtall"), Group("2", layout='monadtall'), Group("3", layout='monadtall'), Group("4", layout='monadtall'), Group("5", layout='monadtall'), Group("6", layout='monadtall'), 
+Group("7", layout='monadtall'), Group("8", layout="monadtall"),Group("9", layout="monadtall"),Group("0", layout="monadtall"),]
 
-for i in groups:
+for i in range(0,10):
     keys.extend([
         # mod1 + letter of group = switch to group
-        Key([mod], i.name, lazy.group[i.name].toscreen(),
-            desc="Switch to group {}".format(i.name)),
+        Key([mod], str((i+1)%10), lazy.group[groups[i].name].toscreen(),
+            desc="Switch to group {}".format(groups[i].name)),
 
         # mod1 + shift + letter of group = switch to & move focused window to group
-        Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True),
-            desc="Switch to & move focused window to group {}".format(i.name)),
+        Key([mod, "shift"], str((i+1)%10), lazy.window.togroup(groups[i].name, switch_group=False),
+            desc="Switch to & move focused window to group {}".format(groups[i].name)),
         # Or, use below if you prefer not to switch to that group.
         # # mod1 + shift + letter of group = move focused window to group
         # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
         #     desc="move focused window to group {}".format(i.name)),
     ])
-layouts_defaults_lohit={"border_width": 4,"margin": 24,"border_focus": "#0066CB","border_normal": "#444444"}
+layouts_defaults_lohit={"border_width": 3,"margin": 5,"border_focus": "#0066CB","border_normal": "#444444"}
 layouts = [
     layout.Columns(**layouts_defaults_lohit),
-    layout.Max(),
+    layout.Max(**layouts_defaults_lohit),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
     layout.MonadTall(**layouts_defaults_lohit),
-    layout.MonadWide(),
+    layout.MonadWide(**layouts_defaults_lohit),
     # layout.RatioTile(),
     # layout.Tile(),
-    # layout.TreeTab(),
+    layout.TreeTab(**layouts_defaults_lohit, font="CaskaydiaCove Nerd Font", active_bg="#0066CB",place_right=True),
     # layout.VerticalTile(),
-    layout.Zoomy(),
+    # layout.Zoomy(),
 ]
 
 widget_defaults = dict(
     font='CaskaydiaCove Nerd Font',
     fontsize=14,
-    padding=4,
-    margin=2,
 )
 extension_defaults = widget_defaults.copy()
 def barCreator(screenno):
     widget_list = [
+    #0
     widget.GroupBox(),
-    widget.Net(background="#00A676", interface="wlo1", format="{down} ↓↑ {up}", use_bits=True, mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("cinnamon-settings network")}),
-    widget.WindowName(),
+    #1
+    widget.WindowName(empty_group_string="Hello Lohit"),
+    #2
     widget.Systray(),
-    widget.Volume(),
-    widget.CurrentLayoutIcon(background="#0077B6",padding = 0,scale = 0.7),
-    widget.CurrentLayout(background='#0077B6'),
-    widget.CheckUpdates(no_update_string="Updates: 0", background="#B24C63"),
+    #3
+    widget.Volume(mouse_callbacks={"Button3": lambda: qtile.cmd_spawn("pavucontrol")}),
+    #4
+    widget.CPU(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal+" btop")}, background="#5B5F97", format="CPU: {load_percent}%"),
+    #5
+    widget.Net(background="#5B5F97", interface="wlo1", format="{down} ↓↑ {up}", use_bits=True, mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("nm-connection-editor")}),
+    #6
+    widget.Memory(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " btop")}, background="#00A676"),
+    #7
+    widget.CheckUpdates(no_update_string="Updates: 0", background="#B24C63", mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " sudo pacman -Syu")}),
+    #8
     widget.Battery(background="#C879FF", format='Battery: {percent: 2.0%}', low_background='#FF8369'),
-    widget.Clock(format='%d-%m %a %I:%M %p', background="#59313C"),
-    widget.QuickExit(background="#444444"),
+    #9
+    widget.Clock(format='%d-%m %a %I:%M %p', background="#0077B6"),
+    #10 59313C
+    #widget.CurrentLayout(background='#0077B6'),
+    #11
+    widget.CurrentLayoutIcon(background="#0077B6",padding = 0,scale = 0.7),
     ]
     if(screenno==1):
+        widget_list.pop(6)
         widget_list.pop(3)
-        widget_list.pop(1)
+        widget_list.pop(2)
     default_bar_lohit=top=bar.Bar(
             widget_list,
-            24,
-            margin=2,
-            background = "#001514",
+            28,
+            margin=0,
+            background = "#001514", # Gray Background
+            # background="#00000000",  # Transparent Background
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         )
@@ -225,7 +249,7 @@ auto_minimize = True
 # Set hook to run autostart.sh on login
 @hook.subscribe.startup_once
 def autostart():
-    home = os.path.expanduser('/home/lohit244/.config/qtile/autostart.sh')
+    home = os.path.expanduser('/home/{}/.config/qtile/autostart.sh'.format(user))
     subprocess.run([home])
 
 

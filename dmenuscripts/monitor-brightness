@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-choice=$(dmenu -h '24px' -fn 'CaskaydiaCove Nerd Font' -p 'Brightness: ')
+choice=$(dmenu -nb "#001514" -sb "#5B5F97" -h '24px' -fn 'CaskaydiaCove Nerd Font' -p 'Brightness(%): ')
 # quit if quit
 if [[ "$choice" == "quit" ]]; then
     echo "Program Terminated." && exit 1

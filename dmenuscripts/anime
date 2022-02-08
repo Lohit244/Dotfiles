@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+#dmenu
+#choice=$(echo "Quit" | dmenu -l 2 -nb "#001514" -h "24px" -fn "CaskaydiaCove Nerd Font " -p "Name: ")
+#rofi
+choice=$(echo "Quit" | rofi -dmenu -p "Name: ")
+
+if [[ $choice == "Quit" ]]; then
+    echo "Terminated." && exit 1
+elif [ "$choice" ]; then
+    kitty /usr/bin/ani-cli "$choice" &
+else
+    echo "No response" && exit 1
+fi

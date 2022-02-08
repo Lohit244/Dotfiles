@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+#rofi
+choice=$(ls /home/lohit244/Documents/Notes/ | rofi -dmenu -p "Select Note: ")
+
+if [[ "$choice" == "Quit" ]]; then
+    echo "Program Terminated." && exit 1
+elif [ "$choice" ]; then
+    emacsclient -c -a emacs "/home/lohit244/Documents/Notes/${choice}" &
+else
+    echo "Program Terminated." && exit 1
+fi

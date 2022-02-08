@@ -5,8 +5,8 @@ from libqtile import bar, layout, widget, extension
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile import qtile
-# from libqtile.utils import guess_terminal
 from libqtile import hook
+# ----------------->       Monitor and apps      <---------------------
 num_monitors = int(subprocess.run('xrandr|grep " connected"|wc -l', shell=True, stdout=subprocess.PIPE).stdout) -1
 mod = "mod4"
 user = "lohit244"
@@ -17,11 +17,8 @@ if num_monitors == 2:
 elif num_monitors == 1:
     monitor = os.path.expanduser('/home/{}/laptop-setup.sh'.format(user))
     subprocess.run([monitor])
-
+# ----------------->     Keys          <--------------------
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -51,13 +48,6 @@ keys = [
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     
-    # Lock Screen
-    Key([mod,"shift"],"g",lazy.spawn("xfce4-screensaver-command -l"), desc="Locks the screen"),
-
-    # Toggle between split and unsplit sides of stack.
-    # Split = all windows displayed
-    # Unsplit = 1 window displayed, like Max layout, but still with
-    # multiple stack panes
     Key([mod, "shift"], "Return", lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
@@ -68,26 +58,30 @@ keys = [
 
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    # Key([mod], "r", lazy.spawncmd(),desc="Spawn a command using a prompt widget"),
+    # Key([mod], "r", lazy.spawncmd(),desc="Spawn a command using a prompt widget"), # The default qtile run prompt
 
     # Custom Keybinds for browser
-    Key([mod], "e", lazy.spawn("firefox"), desc="Launches Firefox"),
-    Key([mod,"shift"], "e", lazy.spawn("qutebrowser"), desc="Launches Qutebrowser"),
-    
+    Key([mod], "w", lazy.spawn("/home/{}/dmenuscripts/websites".format(user)), desc="Launches Common Websites script"),
+    Key([mod,"shift"], "w", lazy.spawn("qutebrowser"), desc="Launches Qutebrowser"),
+
+    # Lock Screen
+    Key([mod,"shift"],"g",lazy.spawn("xfce4-screensaver-command -l"), desc="Locks the screen"),
+
     # Spotify
     Key([mod],"s", lazy.spawn("spotify"), desc="Launches Spotify"),
 
-    # VSCode binding
     Key([mod],"c", lazy.spawn('code'), desc="Launches VSCode"),
 
-    # Steam
-    Key([mod],"d", lazy.spawn('steam'), desc="Launch Steam"),
+    # Steam etc
+    Key([mod, "shift"],"d", lazy.spawn('steam'), desc="Launch Steam"),
+    
+    Key([mod], 'e', lazy.spawn('emacsclient -c -a emacs'), desc="Launch emacs"),
 
-    # Discord
     Key([mod, "shift"],"z", lazy.spawn('Discord'), desc="Launch Discord"),
 
-    # Obsidian - My notes app
-    Key([mod],"x", lazy.spawn('obsidian'), desc="Launch Obsidian"),
+    # Notes
+    Key([mod],"x", lazy.spawn('notes'), desc="Launch Notes Script"),
+    Key([mod, "shift"],"x", lazy.spawn('obsidian'), desc="Launch Obsidian"),
 
 
     # Ranger keybind and file manager (naultilus cause i use manjaro gnome)
@@ -100,25 +94,10 @@ keys = [
     Key([mod],"i", lazy.layout.grow(), desc="Grow window"),
     Key([mod],"f", lazy.window.toggle_floating(), desc="Toggle Floating Mode for selected window"),
 
-    # Dmenu Launch
-    Key([mod], "r", lazy.run_extension(extension.DmenuRun(
-        dmenu_prompt="Run: ",
-        dmenu_font="CaskaydiaCove Nerd Font",
-        dmenu_height=24,
-        dmenu_lines=10,
-        background="#001514",
-        dmenu_ignorecase=True,
-        selected_background="#5B5F97",
-        ))),
-    Key([mod, "shift"], "r", lazy.run_extension(extension.WindowList(
-        dmenu_prompt="Switch To: ",
-        dmenu_font="CaskaydiaCove Nerd Font",
-        dmenu_height=24,
-        dmenu_lines=10,
-        background="#001514",
-        selected_background="#5B5F97",
-        dmenu_ignorecase=True,
-        ))),
+    # Rofi
+    Key([mod],"r",lazy.spawn("rofi -show run")),
+    Key([mod,"shift"],"r",lazy.spawn("rofi -show window")),
+    Key([mod],"m",lazy.spawn("rofi -show emoji")),
 
     # Brightness Keys
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +2%")),
@@ -127,35 +106,52 @@ keys = [
     # Sound Keys
     Key([], 'XF86AudioRaiseVolume', lazy.spawn("amixer -q -D pulse set Master 5%+")),
     Key([], 'XF86AudioLowerVolume', lazy.spawn("amixer -q -D pulse set Master 5%-")), 
-    
+
     # Screenshot
     Key([mod,"shift"],"s", lazy.spawn("scrot -s /home/{}/Pictures/Screenshots/%b%d%H%M%S.png".format(user)), desc="Takes screenshot"),
 
+    # Dmenu Launch
+#   Key([mod], "r", lazy.run_extension(extension.DmenuRun(command="-z",dmenu_prompt="Run: ",dmenu_font="CaskaydiaCove Nerd Font",dmenu_height=24,dmenu_lines=10,background="#001514",dmenu_ignorecase=True,selected_background="#5B5F97",))),
+#   Key([mod, "shift"], "r", lazy.run_extension(extension.WindowList(command="-z",dmenu_prompt="Switch To: ",dmenu_font="CaskaydiaCove Nerd Font",dmenu_height=24,dmenu_lines=10,background="#001514",selected_background="#5B5F97",dmenu_ignorecase=True,))),
 ]
+#-------------------->         colors             <------------------------
+colors = [
+    "#FCFAFA",  #White            |0
+    "#B74F6F",  #Rose             |1
+    "#2191FB",  #Blue             |2
+    "#29335C",  #Dark-Blue        |3
+    "#F3A712",  #Yellow           |4
+    "#260C1A",  #Brown            |5
+    "#3E000C",  #Lighter-Brown    |6
+    "#0CCA4A",  #Green            |7
+    "#080708",  #Black            |8
+    "#114B5F",  #Greenish-Blue    |9
+    "#AC3931",  #Bright Brown     |10
+    "#9B5DE5",  #Purple           |11
+    "#F15BB5",  #Pink             |12
+    "#2F0147",  #Purple           |13
+    "#2A4D14",  #Deep Green       |14
 
-# groups = [Group(i) for i in "123456789"]
-groups = [Group("1", layout="monadtall"), Group("2", layout='monadtall'), Group("3", layout='monadtall'), Group("4", layout='monadtall'), Group("5", layout='monadtall'), Group("6", layout='monadtall'), 
+]
+# ------------------------>             Groups               <-------------------------
+groups = [Group("1", layout="monadtall"), Group("2", layout='monadtall'), Group("3", layout='monadtall'), Group("4", layout='monadtall'), Group("5", layout='monadtall'), Group("6", layout='monadtall'),
 Group("7", layout='monadtall'), Group("8", layout="monadtall"),Group("9", layout="monadtall"),Group("0", layout="monadtall"),]
 
 for i in range(0,10):
     keys.extend([
-        # mod1 + letter of group = switch to group
         Key([mod], str((i+1)%10), lazy.group[groups[i].name].toscreen(),
             desc="Switch to group {}".format(groups[i].name)),
 
-        # mod1 + shift + letter of group = switch to & move focused window to group
         Key([mod, "shift"], str((i+1)%10), lazy.window.togroup(groups[i].name, switch_group=False),
             desc="Switch to & move focused window to group {}".format(groups[i].name)),
-        # Or, use below if you prefer not to switch to that group.
-        # # mod1 + shift + letter of group = move focused window to group
-        # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-        #     desc="move focused window to group {}".format(i.name)),
     ])
-layouts_defaults_lohit={"border_width": 3,"margin": 5,"border_focus": "#0066CB","border_normal": "#444444"}
+
+# ---------------------------->           LAYOUTS            <---------------------
+
+layouts_defaults_lohit={"border_width": 3,"margin": 5,"border_focus": colors[2],"border_normal":colors[3]}
 layouts = [
     layout.Columns(**layouts_defaults_lohit),
     layout.Max(**layouts_defaults_lohit),
-    # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
@@ -163,10 +159,12 @@ layouts = [
     layout.MonadWide(**layouts_defaults_lohit),
     # layout.RatioTile(),
     # layout.Tile(),
-    layout.TreeTab(**layouts_defaults_lohit, font="CaskaydiaCove Nerd Font", active_bg="#0066CB",place_right=True),
+    layout.TreeTab(**layouts_defaults_lohit, font="CaskaydiaCove Nerd Font", active_bg=colors[2],place_right=True),
     # layout.VerticalTile(),
     # layout.Zoomy(),
 ]
+
+# ---------------------->           WIDGETS            <--------------------------
 
 widget_defaults = dict(
     font='CaskaydiaCove Nerd Font',
@@ -176,40 +174,41 @@ extension_defaults = widget_defaults.copy()
 def barCreator(screenno):
     widget_list = [
     #0
-    widget.GroupBox(),
+    widget.CurrentLayout(background=colors[3]),
     #1
-    widget.WindowName(empty_group_string="Hello Lohit"),
+    widget.CurrentLayoutIcon(background=colors[3],padding = 0,scale = 0.7),
     #2
-    widget.Systray(),
+    widget.GroupBox(inactive=colors[6], active=colors[0], hide_unused=True,highlight_method="line",highlight_color=[colors[3],colors[2]]),
     #3
-    widget.Volume(mouse_callbacks={"Button3": lambda: qtile.cmd_spawn("pavucontrol")}),
+    widget.WindowName(empty_group_string="Hello Lohit"),
     #4
-    widget.CPU(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal+" btop")}, background="#5B5F97", format="CPU: {load_percent}%"),
+    widget.Systray(),
     #5
-    widget.Net(background="#5B5F97", interface="wlo1", format="{down} ↓↑ {up}", use_bits=True, mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("nm-connection-editor")}),
+    widget.Volume(fmt="   {} ",mouse_callbacks={"Button3": lambda: qtile.cmd_spawn("pavucontrol")}, background=colors[10]),
     #6
-    widget.Memory(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " btop")}, background="#00A676"),
+    widget.CPU(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal+" btop")}, background=colors[2], format=": {load_percent}%"),
     #7
-    widget.CheckUpdates(no_update_string="Updates: 0", background="#B24C63", mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " sudo pacman -Syu")}),
+    widget.Net(background=colors[4], interface="wlo1", format="↓{down}", use_bits=True, mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("nm-connection-editor")}),
     #8
-    widget.Battery(background="#C879FF", format='Battery: {percent: 2.0%}', low_background='#FF8369'),
+    widget.Memory(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " btop")}, background=colors[7],format=':{MemUsed: .0f}{mm}',),
     #9
-    widget.Clock(format='%d-%m %a %I:%M %p', background="#0077B6"),
+    widget.CheckUpdates(no_update_string=" ﮮ ", background=colors[1],display_format="{updates}: ﮮ " ,mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " sudo pacman -Syu")}),
     #10 59313C
-    #widget.CurrentLayout(background='#0077B6'),
+    widget.Battery(background=colors[14], format='Battery: {percent: 2.0%}', notify_below=20 , low_background='#FF8369'),
     #11
-    widget.CurrentLayoutIcon(background="#0077B6",padding = 0,scale = 0.7),
+    widget.Clock(format='%a %d/%m %I:%M%p', background=colors[13]),
     ]
     if(screenno==1):
-        widget_list.pop(6)
-        widget_list.pop(3)
-        widget_list.pop(2)
+        widget_list.pop(9)
+        widget_list.pop(4)
     default_bar_lohit=top=bar.Bar(
             widget_list,
             28,
             margin=0,
-            background = "#001514", # Gray Background
-            # background="#00000000",  # Transparent Background
+            # background = "#151514", # Darker Background
+            # background = "#1e1e1e", # Gray Background
+            background = "#000000", # Gray Background
+            # background="#00000020",  # Transparent Background
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         )
@@ -222,6 +221,8 @@ mouse = [
     Drag([mod], "Button3", lazy.window.set_size_floating(),start=lazy.window.get_size()),
     Click([mod], "Button2", lazy.window.bring_to_front())
 ]
+
+# ------------------------>            FLOATING RULES             <------------------------
 
 dgroups_key_binder = None
 dgroups_app_rules = []  # type: List
@@ -237,7 +238,9 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='ssh-askpass'),  # ssh-askpass
     Match(title='branchdialog'),  # gitk
     Match(title='pinentry'),  # GPG key password entry
-])
+    Match(wm_class='nitrogen'),  # Nitrogen - wallpaper setter
+    Match(wm_class='galculator'),  # calculator
+], **layouts_defaults_lohit)
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True

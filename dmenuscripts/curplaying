@@ -1,0 +1,3 @@
+#/usr/bin/env bash
+
+notify-send "$(playerctl -p spotifyd metadata --format 'Playing {{ title }}  By  {{ artist }}')" -i "/home/lohit244/.config/spotifyd/logo.png"

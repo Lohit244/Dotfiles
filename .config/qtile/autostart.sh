@@ -7,4 +7,7 @@ nm-applet &
 /home/lohit244/mouse.sh &
 xfce4-power-manager &
 xfce4-screensaver &
-setxkbmap -option caps:swapescape
+xfce4-clipman &
+dunst &
+emacs --daemon &
+touchegg & disown

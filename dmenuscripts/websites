@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+
+import subprocess
+import urllib.parse
+
+websites = {
+    "":"",
+    "youtube": "https://youtube.com",
+    "google": "https://google.com",
+    "monkeytype": "https://monkeytype.com",
+    "dfs": "https://leetcode.com/tag/depth-first-search",
+    "bfs": "https://leetcode.com/tag/breadth-first-search",
+    "dp": "https://leetcode.com/tag/dynamic-programming",
+    "twitch": "https://twitch.tv",
+    "trashtaste": "https://youtube.com/c/trashtaste/videos",
+    "libgen": "libgen.rs",
+    "subscriptions": "https://youtube.com/feed/subscriptions",
+    "stackskb": "https://stackskb.com",
+    "genesispc":"https://genesispc.in",
+    "epomaker":"https://epomaker.com",
+    "reddit":"https://old.reddit.com",
+    "gmail":"https://mail.google.com",
+    "drive":"https://drive.google.com/drive/",
+    "github":"https://github.com",
+    "trashtasteafterdark":"https://www.youtube.com/channel/UCKaN3mt53ATqRjzalb2ALFQ/videos/",
+    "tarik":"https://twitch.tv/tarik",
+    "devdocs":"https://devdocs.io",
+    "amazon":"https://amazon.in",
+    "flipkart":"https://flipkart.com",
+    "arch-home": "https://archlinux.org/",
+    "package search": "https://archlinux.org/packages/",
+    "repositories":"https://github.com/lohit244?tab=repositories",
+    "udemy":"https://www.udemy.com/home/my-courses/learning/",
+}
+keys = websites.keys()
+strkeys = ""
+for key in keys:
+    strkeys+=key+"\n"
+choice = subprocess.run('rofi -dmenu -p "Website: "', shell=True, stdout=subprocess.PIPE,input=strkeys,encoding="ascii")
+if(choice.returncode == 1):
+    exit()
+choice=choice.stdout
+done = False
+for key in keys:
+    if(key == choice[0:-1]):
+        subprocess.run("firefox --new-window {} & disown".format(websites[key]), shell=True)
+        done = True
+if(not done):
+    isURL=False
+    for c in choice:
+        if (c=="."):
+            isURL=True
+    if(isURL):
+        subprocess.run("firefox --new-window http://{} & disown".format(choice), shell=True)
+    else:
+        s = urllib.parse.quote(choice, safe='')
+        subprocess.run("firefox --new-window http://google.com/search?q='{}'& disown".format(s), shell=True)

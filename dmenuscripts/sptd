@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+#dmenu
+#choice=$(printf "Start\nStop\nQuit" | dmenu -h '24px' -nb "#001514" -sb "#5B5F97" -l 3 -fn 'CaskaydiaCove Nerd Font' -p 'start/stop: ')
+#rofi
+choice=$(printf "Start\nStop\nQuit"|rofi -dmenu -p "Command: ")
+# quit if quit
+if [[ "$choice" == "Quit" ]]; then
+    echo "Program Terminated." && exit 1
+elif [[ "$choice" == "Stop" ]]; then
+    systemctl --user stop spotifyd.service
+    killall spotifyd
+    echo "Program Terminated." && exit 1
+elif [[ "$choice" == "Start" ]]; then
+    systemctl --user start spotifyd.service
+    spotifyd
+else
+    echo "Program Terminated." && exit 1
+fi

@@ -1,0 +1,63 @@
+
+
+* {
+	bg:				#000000;
+	fg:				#ffffff;
+	button:				#1b252a;
+
+	background-color:		@bg;
+	text-color:			@fg;
+}
+
+window {
+	width:			    	40%;
+    border-radius: 7px;
+}
+
+prompt { enabled: false; }
+
+entry {
+	placeholder:			"Search";
+	placeholder-color:              @fg;
+	expand:                         true;
+	padding:                        1.5%;
+	border-radius:			10px;
+}
+
+inputbar {
+	children: 			[ prompt, entry ];
+	background-image:               url("img/bg.png");
+	expand:                         false;
+	border-radius:                  0px 0 8px 8px;
+	padding:                        100px 30px 30px 300px;
+}
+
+listview {
+	columns:                        1;
+	lines:	                        4;
+	cycle:                          false;
+	dynamic:                        true;
+	layout:                         vertical;
+	padding:			30px 200px 30px 30px;
+}
+
+mainbox { children: [ inputbar, listview ]; }
+
+element {
+	orientation:                    vertical;
+	padding:                        1.5% 0% 1.5% 0%;
+	border-radius:			10px;
+}
+
+element-text {
+	expand:                         true;
+	vertical-align:                 0.5;
+	margin:                         0.5% 3% 0% 3%;
+	background-color: 		inherit;
+	text-color:       		inherit;
+}
+
+element selected {
+	background-color:               @button;
+	border-radius:                  10px;
+}

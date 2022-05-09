@@ -3,12 +3,19 @@
 import subprocess
 import urllib.parse
 
+# Data ->
+
 websites = {
+    # "lsf": "https://old.reddit.com/r/LivestreamFail/",
+    # "reddit":"https://old.reddit.com",
     "":"",
     "youtube": "https://youtube.com",
     "google": "https://google.com",
     "monkeytype": "https://monkeytype.com",
+    "reddit": "https://libreddit.spike.codes/",
+    "lsf": "https://libreddit.spike.codes/r/LivestreamFail",
     "dfs": "https://leetcode.com/tag/depth-first-search",
+    "leetcode": "https://leetcode.com/study-plan/",
     "bfs": "https://leetcode.com/tag/breadth-first-search",
     "dp": "https://leetcode.com/tag/dynamic-programming",
     "twitch": "https://twitch.tv",
@@ -18,7 +25,6 @@ websites = {
     "stackskb": "https://stackskb.com",
     "genesispc":"https://genesispc.in",
     "epomaker":"https://epomaker.com",
-    "reddit":"https://old.reddit.com",
     "gmail":"https://mail.google.com",
     "drive":"https://drive.google.com/drive/",
     "github":"https://github.com",
@@ -31,7 +37,22 @@ websites = {
     "package search": "https://archlinux.org/packages/",
     "repositories":"https://github.com/lohit244?tab=repositories",
     "udemy":"https://www.udemy.com/home/my-courses/learning/",
+    "searx": "https://serx.cf",
+    "whatsapp": "https://web.whatsapp.com",
+    "fast":"https://fast.com",
+    "twitter":"https://twitter.com",
+    "bit login": "http://172.16.1.1:8090/httpclient.html",
+    "typeracer": "https://play.typeracer.com/?universe=dictionary",
+    "private": "--private-window",
+    "localhost":"localhost:3000",
+    "speedtest":"https://speedtest.net/",
+    "kbdfans": "https://kbdfans.com/",
+    "rectanglesstore":"https://rectangles.store",
 }
+
+#
+#  Bookmarks Search
+#
 keys = websites.keys()
 strkeys = ""
 for key in keys:
@@ -39,12 +60,35 @@ for key in keys:
 choice = subprocess.run('rofi -dmenu -p "Website: "', shell=True, stdout=subprocess.PIPE,input=strkeys,encoding="ascii")
 if(choice.returncode == 1):
     exit()
-choice=choice.stdout
+choice=choice.stdout[0:-1]
 done = False
 for key in keys:
-    if(key == choice[0:-1]):
-        subprocess.run("firefox --new-window {} & disown".format(websites[key]), shell=True)
+    if(key == choice):
+        subprocess.run("firefox --new-window {} &".format(websites[key]), shell=True)
         done = True
+
+#
+#  Google Search
+#
+
+def search(term):
+    s = urllib.parse.quote(term, safe='')
+    subprocess.run("firefox --new-window http://google.com/search?q='{}'&".format(s), shell=True)
+
+#
+#  Youtube Search
+#
+def youtubeSearch(term):
+    term = term[8:]
+    s = urllib.parse.quote(term, safe='')
+    subprocess.run("firefox --new-window http://youtube.com/results?search_query='{}'&".format(s), shell=True)
+
+def localhostHandler(term):
+    term=term[10:]
+    s = term
+    subprocess.run("firefox --new-window localhost:'{}'&".format(s), shell=True)
+
+# if not in keys
 if(not done):
     isURL=False
     for c in choice:
@@ -52,6 +96,9 @@ if(not done):
             isURL=True
     if(isURL):
         subprocess.run("firefox --new-window http://{} & disown".format(choice), shell=True)
+    elif choice[:7] == "youtube":
+        youtubeSearch(choice)
+    elif choice[:9] == "localhost":
+        localhostHandler(choice)
     else:
-        s = urllib.parse.quote(choice, safe='')
-        subprocess.run("firefox --new-window http://google.com/search?q='{}'& disown".format(s), shell=True)
+        search(choice)

@@ -1,3 +1,10 @@
 #/usr/bin/env bash
 
-notify-send "$(playerctl -p spotifyd metadata --format 'Playing {{ title }}  By  {{ artist }}')" -i "/home/lohit244/.config/spotifyd/logo.png"
+# spotify logo as img
+# notify-send "$(playerctl -p spotifyd metadata --format 'Playing {{ title }}  By  {{ artist }}')" -i "/home/lohit244/.config/spotifyd/logo.png"
+
+# actual song url
+
+curl "$(playerctl -p spotifyd metadata --format '{{ mpris:artUrl }}')" --output /home/$(whoami)/.config/spotifyd/tempimg.png
+notify-send "$(playerctl -p spotifyd metadata --format 'Playing {{ title }}  By  {{ artist }}')" -i /home/$(whoami)/.config/spotifyd/tempimg.png
+rm /home/$(whoami)/.config/spotifyd/tempimg.png

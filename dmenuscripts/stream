@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import subprocess
+import json
+
+choice = subprocess.run('echo "Quit" | rofi -dmenu -p "Link: "',shell=True, stdout=subprocess.PIPE, encoding="ascii")
+if(choice.returncode != 0):
+    exit()
+choice = choice.stdout[0:-1]
+qualityopts = subprocess.run('streamlink {} --json'.format(choice),shell=True, stdout=subprocess.PIPE, encoding="ascii")
+if(qualityopts.returncode != 0):
+    exit()
+qualityopts = qualityopts.stdout[0:-1]
+qualityopts = json.loads(qualityopts)
+opts = ""
+for k in qualityopts["streams"].keys():
+    opts = opts + k + "\n"
+quality = subprocess.run('rofi -dmenu -p "Quality :"',shell=True, stdout=subprocess.PIPE, encoding="ascii", input=opts)
+if(quality.returncode != 0):
+    exit()
+quality = quality.stdout[0:-1]
+subprocess.run("streamlink {} {} &".format(choice,quality), shell=True)

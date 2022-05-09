@@ -1,4 +1,3 @@
-export PATH="$HOME/.emacs.d/bin:$HOME/dmenuscripts:$PATH"
-export EDITOR=vim
-export DISTRIB_ID=arch
-export DISTRIB_RELEASE=$(uname -r)
+export EDITOR="vim"
+export PATH="$HOME/Applications:$HOME/dmenuscripts:$HOME/.emacs.d/bin:$PATH"
+

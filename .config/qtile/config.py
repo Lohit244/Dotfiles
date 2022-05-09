@@ -11,12 +11,12 @@ num_monitors = int(subprocess.run('xrandr|grep " connected"|wc -l', shell=True, 
 mod = "mod4"
 user = "lohit244"
 terminal = "kitty"
-if num_monitors == 2:
-    monitor = os.path.expanduser('/home/{}/monitor-setup.sh'.format(user))
-    subprocess.run([monitor]) 
-elif num_monitors == 1:
-    monitor = os.path.expanduser('/home/{}/laptop-setup.sh'.format(user))
-    subprocess.run([monitor])
+# if num_monitors == 2:
+    # monitor = os.path.expanduser('/home/{}/monitor-setup.sh'.format(user))
+    # subprocess.run([monitor]) 
+# elif num_monitors == 1:
+    # monitor = os.path.expanduser('/home/{}/laptop-setup.sh'.format(user))
+    # subprocess.run([monitor])
 # ----------------->     Keys          <--------------------
 keys = [
     # Switch between windows
@@ -65,39 +65,34 @@ keys = [
     Key([mod,"shift"], "w", lazy.spawn("qutebrowser"), desc="Launches Qutebrowser"),
 
     # Lock Screen
-    Key([mod,"shift"],"g",lazy.spawn("xfce4-screensaver-command -l"), desc="Locks the screen"),
+    Key([mod,"shift"],"g",lazy.spawn("betterlockscreen -l dim --time-format '%l:%H %p'"), desc="Locks the screen"),
 
     # Spotify
-    Key([mod],"s", lazy.spawn("spotify"), desc="Launches Spotify"),
+    Key([mod],"s", lazy.spawn(terminal + " spt"), desc="Launches Spotify"),
 
     Key([mod],"c", lazy.spawn('code'), desc="Launches VSCode"),
 
     # Steam etc
-    Key([mod, "shift"],"d", lazy.spawn('steam'), desc="Launch Steam"),
+    Key([mod, "shift"],"d", lazy.spawn('com.valvesoftware.Steam'), desc="Launch Steam"),
     
     Key([mod], 'e', lazy.spawn('emacsclient -c -a emacs'), desc="Launch emacs"),
 
-    Key([mod, "shift"],"z", lazy.spawn('Discord'), desc="Launch Discord"),
+    Key([mod, "shift"],"z", lazy.spawn('flatpak run com.discordapp.Discord'), desc="Launch Discord"),
 
     # Notes
     Key([mod],"x", lazy.spawn('notes'), desc="Launch Notes Script"),
-    Key([mod, "shift"],"x", lazy.spawn('obsidian'), desc="Launch Obsidian"),
+    Key([mod, "shift"],"x", lazy.spawn('notion-app'), desc="Launch Notion"),
 
 
     # Ranger keybind and file manager (naultilus cause i use manjaro gnome)
     Key([mod],"p", lazy.spawn(terminal + " ranger"), desc="Launches Ranger"),
-    Key([mod, "shift"],"p", lazy.spawn("thunar"), desc="Launches Thunar"),
+    Key([mod, "shift"],"p", lazy.spawn("nautilus"), desc="Launches Nautilus"),
 
     # keybinds to maximize and toggle floating mode
     # Key([mod],"m", lazy.layout.maximize()),
     Key([mod],"o", lazy.layout.shrink(), desc="Shrink window"),
     Key([mod],"i", lazy.layout.grow(), desc="Grow window"),
     Key([mod],"f", lazy.window.toggle_floating(), desc="Toggle Floating Mode for selected window"),
-
-    # Rofi
-    Key([mod],"r",lazy.spawn("rofi -show run")),
-    Key([mod,"shift"],"r",lazy.spawn("rofi -show window")),
-    Key([mod],"m",lazy.spawn("rofi -show emoji")),
 
     # Brightness Keys
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +2%")),
@@ -108,11 +103,21 @@ keys = [
     Key([], 'XF86AudioLowerVolume', lazy.spawn("amixer -q -D pulse set Master 5%-")), 
 
     # Screenshot
-    Key([mod,"shift"],"s", lazy.spawn("scrot -s /home/{}/Pictures/Screenshots/%b%d%H%M%S.png".format(user)), desc="Takes screenshot"),
+    #Key([mod,"shift"],"s", lazy.spawn("scrot -s /home/{}/Pictures/Screenshots/%b%d%H%M%S.png".format(user)), desc="Takes screenshot"),
+    Key([mod,"shift"],"s", lazy.spawn("flameshot gui -c -p /home/{}/Pictures/Screenshots/".format(user)), desc="Takes screenshot"),
 
     # Dmenu Launch
-#   Key([mod], "r", lazy.run_extension(extension.DmenuRun(command="-z",dmenu_prompt="Run: ",dmenu_font="CaskaydiaCove Nerd Font",dmenu_height=24,dmenu_lines=10,background="#001514",dmenu_ignorecase=True,selected_background="#5B5F97",))),
-#   Key([mod, "shift"], "r", lazy.run_extension(extension.WindowList(command="-z",dmenu_prompt="Switch To: ",dmenu_font="CaskaydiaCove Nerd Font",dmenu_height=24,dmenu_lines=10,background="#001514",selected_background="#5B5F97",dmenu_ignorecase=True,))),
+   # Key([mod], "r", lazy.run_extension(extension.DmenuRun(command="-z",dmenu_prompt="Run: ",dmenu_font="CaskaydiaCove Nerd Font",dmenu_height=24,dmenu_lines=10,background="#001514",dmenu_ignorecase=True,selected_background="#5B5F97",))),
+   # Key([mod, "shift"], "r", lazy.run_extension(extension.WindowList(command="-z",dmenu_prompt="Switch To: ",dmenu_font="CaskaydiaCove Nerd Font",dmenu_height=24,dmenu_lines=10,background="#001514",selected_background="#5B5F97",dmenu_ignorecase=True,))),
+
+    # Rofi
+    Key([mod],"r",lazy.spawn("rofi -show run")),
+    Key([mod,"shift"],"r",lazy.spawn("rofi -show window")),
+    Key([mod],"m",lazy.spawn("rofi -show emoji")),
+
+    # Switch Groups using Arrow Keys
+    Key([mod],"Right", lazy.screen.nextgroup(),desc="Switch to next group"),
+    Key([mod],"Left", lazy.screen.prevgroup(), desc="Switch to prev group"),
 ]
 #-------------------->         colors             <------------------------
 colors = [
@@ -148,17 +153,17 @@ for i in range(0,10):
 
 # ---------------------------->           LAYOUTS            <---------------------
 
-layouts_defaults_lohit={"border_width": 3,"margin": 5,"border_focus": colors[2],"border_normal":colors[3]}
+layouts_defaults_lohit={"border_width": 3,"margin": 5,"border_focus": colors[2],"border_normal":colors[5]}
 layouts = [
-    layout.Columns(**layouts_defaults_lohit),
     layout.Max(**layouts_defaults_lohit),
-    # layout.Stack(num_stacks=2),
+    layout.Stack(**layouts_defaults_lohit,num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
     layout.MonadTall(**layouts_defaults_lohit),
+    layout.Columns(**layouts_defaults_lohit),
     layout.MonadWide(**layouts_defaults_lohit),
-    # layout.RatioTile(),
-    # layout.Tile(),
+    # layout.RatioTile(**layouts_defaults_lohit),
+    # layout.Tile(**layouts_defaults_lohit),
     layout.TreeTab(**layouts_defaults_lohit, font="CaskaydiaCove Nerd Font", active_bg=colors[2],place_right=True),
     # layout.VerticalTile(),
     # layout.Zoomy(),
@@ -178,7 +183,7 @@ def barCreator(screenno):
     #1
     widget.CurrentLayoutIcon(background=colors[3],padding = 0,scale = 0.7),
     #2
-    widget.GroupBox(inactive=colors[6], active=colors[0], hide_unused=True,highlight_method="line",highlight_color=[colors[3],colors[2]]),
+    widget.GroupBox(inactive=colors[6], active=colors[0], hide_unused=True,highlight_method="line",highlight_color=[colors[5],colors[2]]),
     #3
     widget.WindowName(empty_group_string="Hello Lohit"),
     #4
@@ -186,20 +191,20 @@ def barCreator(screenno):
     #5
     widget.Volume(fmt="   {} ",mouse_callbacks={"Button3": lambda: qtile.cmd_spawn("pavucontrol")}, background=colors[10]),
     #6
-    widget.CPU(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal+" btop")}, background=colors[2], format=": {load_percent}%"),
-    #7
+    widget.CPU(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal+" 'btop")}, background=colors[2], format=": {load_percent}%"),
+    #7 enp0s20f0u4 ↑
     widget.Net(background=colors[4], interface="wlo1", format="↓{down}", use_bits=True, mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("nm-connection-editor")}),
     #8
     widget.Memory(mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " btop")}, background=colors[7],format=':{MemUsed: .0f}{mm}',),
     #9
-    widget.CheckUpdates(no_update_string=" ﮮ ", background=colors[1],display_format="{updates}: ﮮ " ,mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " sudo pacman -Syu")}),
+    # widget.CheckUpdates(no_update_string=" ﮮ ", background=colors[1],display_format="{updates}: ﮮ " ,mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(terminal + " sudo pacman -Syu")}),
     #10 59313C
     widget.Battery(background=colors[14], format='Battery: {percent: 2.0%}', notify_below=20 , low_background='#FF8369'),
     #11
     widget.Clock(format='%a %d/%m %I:%M%p', background=colors[13]),
     ]
     if(screenno==1):
-        widget_list.pop(9)
+        # widget_list.pop(9)
         widget_list.pop(4)
     default_bar_lohit=top=bar.Bar(
             widget_list,
@@ -207,7 +212,7 @@ def barCreator(screenno):
             margin=0,
             # background = "#151514", # Darker Background
             # background = "#1e1e1e", # Gray Background
-            background = "#000000", # Gray Background
+            background = "#11113335", # Gray Background
             # background="#00000020",  # Transparent Background
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
@@ -227,7 +232,7 @@ mouse = [
 dgroups_key_binder = None
 dgroups_app_rules = []  # type: List
 follow_mouse_focus = True
-bring_front_click = False
+bring_front_click = True
 cursor_warp = False
 floating_layout = layout.Floating(float_rules=[
     # Run the utility of `xprop` to see the wm class and name of an X client.
@@ -240,6 +245,7 @@ floating_layout = layout.Floating(float_rules=[
     Match(title='pinentry'),  # GPG key password entry
     Match(wm_class='nitrogen'),  # Nitrogen - wallpaper setter
     Match(wm_class='galculator'),  # calculator
+    Match(wm_class='gnome-calculator'),  # calculator
 ], **layouts_defaults_lohit)
 auto_fullscreen = True
 focus_on_window_activation = "smart"
@@ -254,7 +260,7 @@ auto_minimize = True
 def autostart():
     home = os.path.expanduser('/home/{}/.config/qtile/autostart.sh'.format(user))
     subprocess.run([home])
-
+subprocess.Popen(["nitrogen --restore"], shell=True,)
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
 # string besides java UI toolkits; you can see several discussions on the

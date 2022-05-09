@@ -43,12 +43,25 @@ call plug#end()
 let mapleader= " "
 set guifont="CaskaydiaCove Nerd Font"
 set laststatus=2
-
 map <leader>n ni
 
+" ----------- Gotham Color Theme ------------
 colorscheme gotham
-let g:minimap_auto_start=1
-let g:lightline = {
-      \ 'colorscheme': 'gotham',
-      \ }
+let g:lightline = { 'colorscheme': 'gotham' }
+
+
+" --------- Everforest Color Theme -----------
+" colorscheme everforest
+" set background=dark
+" let g:everforest_better_performance = 1
+" let g:lightline = {'colorscheme' : 'everforest'}
+" let g:everforest_background = 'hard'
+" let g:minimap_auto_start=1
+
+
+" vim hardcodes background color erase even if the terminfo file does
+" not contain bce (not to mention that libvte based terminals
+" incorrectly contain bce in their terminfo files). This causes
+" incorrect background rendering when using a color theme with a
+" background color.
 let &t_ut=''

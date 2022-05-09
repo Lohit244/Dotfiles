@@ -2,7 +2,8 @@
 
 #dmenu
 #choice=$(echo "Quit" | dmenu -l 2 -nb "#001514" -sb "#5B5F97" -h '24px' -fn 'CaskaydiaCove Nerd Font' -p 'Brightness(%): ')
-choice=$(echo "Quit"| rofi -dmenu -p "Brightness(%): ")
+curbright=$(ddcutil -t getvcp 10 | awk -F' ' '{$1=$2=$3=$5=""; print $4}')
+choice=$(printf "${curbright}\nQuit"| rofi -dmenu -p "Brightness(%): ")
 # quit if quit
 if [[ "$choice" == "Quit" ]]; then
     echo "Program Terminated." && exit 1

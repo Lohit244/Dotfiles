@@ -4,8 +4,8 @@
 #choice=$(echo "Quit" | dmenu -l 2 -nb "#001514" -sb "#5B5F97" -h '24px' -fn 'CaskaydiaCove Nerd Font' -p 'Brightness(%): ')
 
 #rofi
-choice=$(echo "Quit"| rofi -dmenu -p "Brightness(%): ")
-echo $choice
+curbright=$(( $(brightnessctl g)*100/$(brightnessctl m) ))
+choice=$(printf "${curbright}\nQuit"| rofi -dmenu -p "Brightness(%): ")
 # quit if quit
 if [[ "$choice" == "Quit" ]]; then
     echo "Program Terminated." && exit 1

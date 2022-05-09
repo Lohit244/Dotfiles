@@ -1,13 +1,11 @@
 #!/usr/bin/env bash 
 
-lxsession &
-picom --config /home/lohit244/.config/picom/picom.conf &
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+picom --config ~/.config/picom/picom.conf --experimental-backends &
 nitrogen --restore &
 nm-applet &
+blueman-applet &
 /home/lohit244/mouse.sh &
-xfce4-power-manager &
-xfce4-screensaver &
-xfce4-clipman &
 dunst &
-emacs --daemon &
+autorandr -c &
 touchegg & disown

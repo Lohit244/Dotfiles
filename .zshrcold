@@ -5,33 +5,31 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Use powerline
+USE_POWERLINE="true"
+# Source manjaro-zsh-configuration
+if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
+  source /usr/share/zsh/manjaro-zsh-config
+fi
+# Use manjaro zsh prompt
+ if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
+   source /usr/share/zsh/manjaro-zsh-prompt
+ fi
+
 setopt autocd
 
 # If tty / no support for 256 bit colors then drop down to bash
 if [ `tput colors` != "256" ]; then
   exec bash -l;
 fi 
-HISTFILE=~/.zsh_history
-HISTSIZE=SAVEHIST=10000
-setopt sharehistory
-setopt extendedhistory
-autoload -Uz compinit && compinit
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 export LANG=en_US.UTF-8
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source /usr/share/nvm/init-nvm.sh
-bindkey -e
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
+#bindkey -v
 
 # clear
 # colorscript exec square
 # figlet lohit -f mini
+
 alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ls='exa --group-directories-first'
 alias la='exa -la --icons --group-directories-first'
@@ -47,7 +45,10 @@ alias gm='git commit -m'
 alias mkdir='mkdir -pv'
 alias v='vim'
 alias sv='sudo -e'
-alias r="ranger"
-alias vweb="vim ~/dmenuscripts/websites"
-crun(){ make "$1" && ./"$1" }
-fork(){ fork|fork & }
+alias xclip='xclip -sel clip'
+#alias emacsserv='emacs --daemon'
+#alias emac='emacsclient -c -a emacs'
+alias vweb='vim $(where websites)'
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -1,0 +1,7 @@
+{
+  "dead_code": {
+    "prefix": "dead_code",
+    "body": ["#[allow(dead_code)]"],
+    "description": "Snippet to allow dead_code"
+  }
+}
